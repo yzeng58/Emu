@@ -260,7 +260,7 @@ class EmuVisualGeneration(nn.Module, ModelParallelMixin):
         ins = cls.from_config(config_path, **kwargs).to(dtype)
 
         if use_safetensors:
-            state_dict = load_file(model_path)
+            state_dict = load_file(model_path, device = 'cuda')
         else:
             state_dict = torch.load(model_path)
 

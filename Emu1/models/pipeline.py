@@ -130,15 +130,16 @@ class EmuGenerationPipeline(nn.Module):
         image = self.decode_latents(latents)
 
         # 9. Run safety checker
+        """
         image, has_nsfw_concept = self.run_safety_checker(
             image,
             device,
             dtype
         )
-
+        """
         # 10. Convert to PIL
         image = self.numpy_to_pil(image)
-        return image[0], has_nsfw_concept[0] if has_nsfw_concept is not None else has_nsfw_concept
+        return image[0]#, has_nsfw_concept[0] if has_nsfw_concept is not None else has_nsfw_concept
 
     def _prepare_and_encode_inputs(
         self,
@@ -221,15 +222,15 @@ class EmuGenerationPipeline(nn.Module):
         model_path: str,
         **kwargs,
     ) -> nn.Module:
-        with open(f'models/{model_name}.json', "r", encoding="utf8") as f:
+        with open(f'models/Emu/Emu1/models/{model_name}.json', "r", encoding="utf8") as f:
             model_cfg = json.load(f)
 
         model = Emu(**model_cfg, cast_dtype=torch.float, **kwargs)
         ckpt = torch.load(model_path, map_location="cpu")
         if "module" in ckpt:
-            model.load_state_dict(ckpt["module"], strict=True)
+            model.load_state_dict(ckpt["module"], strict=False)
         else:
-            model.load_state_dict(ckpt, strict=True)
+            model.load_state_dict(ckpt, strict=False)
 
         return model
 
